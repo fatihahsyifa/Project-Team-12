@@ -8,18 +8,16 @@ from keuangan import Keuangan
 from transaksi import Transaksi
 from akun import Akun
 
-
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('login.ui', self)  # load login.ui
+        uic.loadUi('login.ui', self)
 
-        #  skip login page
         self.mainApp = MainWindow()
         self.mainApp.show()
         self.close()
 
-        self.button_login.clicked.connect(self.authenticate)  # kalo tombol login diklik, jalankan fungsi authenticate
+        self.button_login.clicked.connect(self.authenticate)
 
     def authenticate(self):
         username = self.input_username.text()
@@ -38,7 +36,6 @@ class LoginWindow(QMainWindow):
                 print("wrong credentials")
         else:
             print("wrong credentials")
-
 
 class MainWindow(QMainWindow):
     def __init__(self):

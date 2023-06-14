@@ -13,20 +13,275 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>60</y>
-     <width>301</width>
-     <height>16</height>
+     <x>20</x>
+     <y>30</y>
+     <width>331</width>
+     <height>61</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>26</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Halaman Produk</string>
    </property>
   </widget>
+  <widget class="QTableView" name="tableView">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>120</y>
+     <width>781</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+   <property name="cornerButtonEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>120</y>
+     <width>261</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Tambah Produk Baru</string>
+   </property>
+   <widget class="QLineEdit" name="input_baru_name">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>40</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nama:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_tambah_produk">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>240</y>
+      <width>161</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tambah Produk</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Merk:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input_baru_merk">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>70</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Buy Price:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input_baru_buy_price">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>100</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sell Price:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input_baru_sell_price">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>130</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input_baru_discount">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>160</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input_baru_color">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>190</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string comment="&quot;00&quot;" extracomment="&quot;00&quot;"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Discount:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>190</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Color:</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="button_hapus_produk">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>640</y>
+     <width>161</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hapus Produk</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_edit_produk">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>640</y>
+     <width>161</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ubah Produk</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_stok_produk">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>640</y>
+     <width>161</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stok dan Size</string>
+   </property>
+  </widget>
  </widget>
+ <tabstops>
+  <tabstop>input_baru_name</tabstop>
+  <tabstop>input_baru_merk</tabstop>
+  <tabstop>input_baru_buy_price</tabstop>
+  <tabstop>input_baru_sell_price</tabstop>
+  <tabstop>input_baru_discount</tabstop>
+  <tabstop>input_baru_color</tabstop>
+  <tabstop>button_tambah_produk</tabstop>
+  <tabstop>tableView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
