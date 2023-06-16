@@ -126,8 +126,11 @@ class Produk(QWidget):
             data = self.df_produk.loc[row]
             self.sizeProduk = SizeProduk(data[0])
             self.sizeProduk.show()
-            self.sizeProduk.makeRestock.connect(self.makeTransactions.emit("ok"))
+            self.sizeProduk.makeRestock.connect(self.sendSignal)
 
     def showWarning(self, message):
         self.warning = Warning(message)
         self.warning.show()
+
+    def sendSignal(self):
+        self.makeTransactions.emit("ok")
