@@ -1,23 +1,24 @@
 import pandas as pd
 from PyQt6 import uic
+from PyQt6 import QtCore as Qtc
 from PyQt6.QtCore import Qt, QAbstractTableModel
 from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
 
 
-class PandasModel(QAbstractTableModel):
-    def __init__(self, data, selected_id):
+class PandasModel(QAbstractTableModel): #memperbarui stock dan size product
+    def __init__(self, data, selected_id): #mencari jumlah baris data yang sesuai dgn id yg diklik
         super(PandasModel, self).__init__()
         self._data = data
         self.selected_id = selected_id
 
     def rowCount(self, index):
-        return len(self._data.loc[self._data["id_product"] == self.selected_id])
+        return len(self._data.loc[self._data["id_product"] == self.selected_id])  # meload yg product id nya sesuai
 
     def columnCount(self, parnet=None):
         return self._data.shape[1]
 
-    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole): #
         if index.isValid():
             if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
                 value = self._data.loc[self._data["id_product"] == self.selected_id].iloc[index.row(), index.column()]
@@ -29,22 +30,24 @@ class PandasModel(QAbstractTableModel):
 
 
 class SizeProduk(QWidget):
+    makeRestock = Qtc.pyqtSignal(str)
+
     def __init__(self, selected_id):
         super().__init__()
-        self.selected_id = selected_id
+        self.selected_id = selected_id  # menyimpan id product yang dikirim dari halaman produk
         uic.loadUi('produk_size.ui', self)
         self.initTable()
 
         self.input_baru_size.setValidator(QIntValidator(1, 1_999_999_999, self))
         self.input_baru_stok.setValidator(QIntValidator(1, 1_999_999_999, self))
         self.input_restock.setValidator(QIntValidator(1, 1_999_999_999, self))
-        self.groupBox_restock.setVisible(False)
+        self.groupBox_restock.setVisible(False)  # menyembunyikan form restock
 
         self.button_tambah_size.clicked.connect(self.tambahSize)
         self.button_restock.clicked.connect(self.restock)
 
-        df_produk = pd.read_csv('data/produk.csv')
-        self.buy_price = df_produk.loc[df_produk["id"] == selected_id].iloc[0]["buy_price"]
+        df_produk = pd.read_csv('data/produk.csv') #mengetahui harga beli produk
+        self.buy_price = df_produk.loc[df_produk["id"] == selected_id].iloc[0]["buy_price"]  # mendapatkan buy price dari produk
 
     def initTable(self):
         self.df = pd.read_csv('data/size.csv')
@@ -72,7 +75,7 @@ class SizeProduk(QWidget):
                 new_row = [new_id, self.selected_id, size, stok]
 
                 self.df.loc[len(self.df)] = new_row
-                self.makeTransaction(int(stok * self.buy_price))
+                self.makeTransaction(int(stok * self.buy_price))  # menyimpan transaksi ke keuangan
                 self.input_baru_size.clear()
                 self.input_baru_stok.clear()
                 self.df.to_csv("data/size.csv", index=False)
@@ -80,7 +83,7 @@ class SizeProduk(QWidget):
 
     def restock(self):
         if len(self.tableView.selectedIndexes()) > 0:
-            self.groupBox_restock.setVisible(True)
+            self.groupBox_restock.setVisible(True)  # menampilkan form restock
             self.button_restock_save.clicked.connect(self.restockSave)
 
     def restockSave(self):
@@ -90,6 +93,7 @@ class SizeProduk(QWidget):
             temp_df = self.df.sort_values(by=['id_product'])
             temp_id = temp_df.loc[temp_df["id_product"] == self.selected_id].reset_index(drop=True).loc[row]["id"]
             data = self.df.loc[self.df["id"] == temp_id].iloc[0]
+            # lima baru diatas untuk mendapatkan data dari size yang dipilih / direstock
 
             added_stock = self.input_restock.text()
             if added_stock == "":
@@ -120,3 +124,5 @@ class SizeProduk(QWidget):
         new_row = [new_id, "out", 0-amount, None]
         df.loc[new_id] = new_row
         df.to_csv("data/keuangan.csv", index=False)
+        self.makeRestock.emit("ok")
+
