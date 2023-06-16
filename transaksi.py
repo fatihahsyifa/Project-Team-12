@@ -1,7 +1,6 @@
 import pandas as pd
 from PyQt6 import uic
 from PyQt6.QtCore import Qt, QAbstractTableModel
-from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
 
 from transaksi_detail import DetailTransaksi

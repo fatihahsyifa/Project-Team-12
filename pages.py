@@ -7,47 +7,44 @@ from produk import Produk
 from keuangan import Keuangan
 from transaksi import Transaksi
 from akun import Akun
+from warning import Warning
 
 
-# yang ada di Login.py kita pindah sini (LoginWindow)
-# Halaman login sekarang berdiri sendiri / memiliki window sendiri (sebelumnya sebagai widget di MainWindow)
-# kita ubah biar mudah mengatur pergantian halaman, jadi kalo login udah selesai, windownya ketutup diganti main window
-# yang berisi menu2 aplikasi kita
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('login.ui', self)  # load login.ui
+        uic.loadUi('login.ui', self)
+        self.df_temp_user = pd.read_csv('data/temp_user.csv')
+        self.button_login.clicked.connect(self.authenticate)
 
-        #  skip login page
-        self.mainApp = MainWindow()
-        self.mainApp.show()
-        self.close()
+    def showWarning(self, message):
+        self.warning = Warning(message)
+        self.warning.show()
 
-        self.button_login.clicked.connect(self.authenticate)  # kalo tombol login diklik, jalankan fungsi authenticate
-
-    # sama kayak sebelumnya
     def authenticate(self):
         username = self.input_username.text()
         password = self.input_password.text()
 
-# ngambil data di database utk dicocokkan dgn yg diinput sama user
         df = pd.read_csv('data/user.csv')
-        users = df[df["username"] == username] # searching yg namanya sesuai
+        users = df[df["username"] == username]
 
-# melakukan pencocokan data apakah sesuai
         if not users.empty:
-            user = users.iloc[0] # gak kosong/ada
+            user = users.iloc[0]
             if user.username == username and user.password == password:
-                self.mainApp = MainWindow()  # untuk menginisiasi MainWindow
-                self.mainApp.show()  # menampilkan mainWindow
-                self.close()  # menutup LoginWindow
+                new_row = [user.id, user.role, user.name, user.username]
+                self.df_temp_user.drop(self.df_temp_user.index, inplace=True)
+                self.df_temp_user.loc[0] = new_row
+                self.df_temp_user.to_csv('data/temp_user.csv', index=False)
+
+                self.mainApp = MainWindow()
+                self.mainApp.show()
+                self.close()
             else:
-                print("wrong credentials")
+                self.showWarning("Username / Password salah")
         else:
-            print("wrong credentials")
+            self.showWarning("Username / Password salah")
 
 
-# semua menu aplikasi kita bakalan berada di sini, perpindahan halaman menggunakan stackedWidget
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -73,6 +70,7 @@ class MainWindow(QMainWindow):
         self.stackedWidget.addWidget(self.akun)
         self.button_akun.clicked.connect(lambda: self.move_to(4))
 
+        self.showMenu()
         self.button_keluar.clicked.connect(self.close)
 
         self.kasir.createdNewTransaction.connect(self.transaksi.initTable)
@@ -80,13 +78,18 @@ class MainWindow(QMainWindow):
 
         self.produk.makeTransactions.connect(self.keuangan.initTable)
 
-
     def move_to(self, index):
         self.stackedWidget.setCurrentIndex(index)
+
+    def showMenu(self):
+        self.df_temp_user = pd.read_csv('data/temp_user.csv')
+        if self.df_temp_user.loc[0]["role"] == "cashier":
+            self.button_keuangan.setVisible(False)
+            self.button_akun.setVisible(False)
 
 
 if __name__ == '__main__':
     app = QApplication([])
-    window = LoginWindow()  # Window pertama yang dijalanin adalah loginwindow
+    window = LoginWindow()
     window.show()
     app.exec()
