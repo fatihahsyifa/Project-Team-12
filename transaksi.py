@@ -46,5 +46,5 @@ class Transaksi(QWidget):
             rows = sorted(set(index.row() for index in self.tableView.selectedIndexes()))
             row = rows[0]
             data = self.df.loc[row]
-            self.sizeProduk = DetailTransaksi(data[0])
-            self.sizeProduk.show()
+            self.detailTransaksi = DetailTransaksi(data[0])
+            self.detailTransaksi.show()

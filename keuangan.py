@@ -41,10 +41,10 @@ class Keuangan(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         uic.loadUi('keuangan.ui', self)
-        self.df = pd.read_csv('data/keuangan.csv')
         self.initTable()
 
     def initTable(self):
+        self.df = pd.read_csv('data/keuangan.csv')
         self.model = PandasModel(self.df)
         self.tableView.setModel(self.model)
 

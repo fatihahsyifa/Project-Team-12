@@ -1,5 +1,5 @@
 id,merk,name,buy_price,sell_price,discount,color
-1,Adidas Blue,Adidas Futsal,1000000,1250000,0,red
+1,Adidas Futsal,Adidas Blue,1000000,1250000,5,red
 2,Puma,Puma Futsal,1000000,1250000,0,red
 3,Puma Badminton,Puma,1000000,1250000,0,blue
 4,Adidas Badminton,Adidas,1000000,1250000,0,blue
