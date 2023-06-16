@@ -1,8 +1,10 @@
 import pandas as pd
 from PyQt6 import uic
-from PyQt6.QtCore import Qt, QAbstractTableModel
+from PyQt6.QtCore import Qt, QAbstractTableModel, QDateTime
 from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
+
+from warning import Warning
 
 
 class PandasModel(QAbstractTableModel):
@@ -11,36 +13,27 @@ class PandasModel(QAbstractTableModel):
         self._data = data
 
     def rowCount(self, index):
-        return len(self._data.loc[self._data["deleted_at"].isna()])
+        return self._data.shape[0]
 
     def columnCount(self, parnet=None):
-        return self._data.shape[1] - 1
+        return self._data.shape[1]
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if index.isValid():
             if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-                value = self._data.loc[self._data["deleted_at"].isna()].iloc[index.row(), index.column()]
+                value = self._data.iloc[index.row(), index.column()]
                 return str(value)
-
-    # def setData(self, index, value, role):
-    #     if role == Qt.ItemDataRole.EditRole:
-    #         self._data.iloc[index.row(), index.column()] = value
-    #         return True
-    #     return False
 
     def headerData(self, col, orientation, role):
         if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             return self._data.columns[col]
-
-    def flags(self, index):
-        # return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable
-        return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
 
 
 class Keuangan(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         uic.loadUi('keuangan.ui', self)
+        self.df_temp_user = pd.read_csv('data/temp_user.csv')
         self.initTable()
 
     def initTable(self):
@@ -59,11 +52,13 @@ class Keuangan(QWidget):
     def tambahSaldo(self):
         amount = self.input_tambah_saldo.text()
         if amount is None or amount == "":
-            print("kosong")
+            self.showWarning("Amount tidak boleh kosong")
         else:
             amount = int(self.input_tambah_saldo.text())
             new_id = len(self.df) + 1
-            new_row = [new_id, "in", amount, None]
+            date = QDateTime.currentDateTime().toString(Qt.DateFormat.ISODate)
+            operator = self.df_temp_user.loc[0, "username"]
+            new_row = [new_id, "in", amount, date, operator]
             self.df.loc[new_id] = new_row
             self.input_tambah_saldo.clear()
             self.df.to_csv("data/keuangan.csv", index=False)
@@ -72,11 +67,13 @@ class Keuangan(QWidget):
     def tarikSaldo(self):
         amount = self.input_tarik_saldo.text()
         if amount is None or amount == "":
-            print("kosong")
+            self.showWarning("Amount tidak boleh kosong")
         else:
             amount = 0 - int(self.input_tarik_saldo.text())
             new_id = len(self.df) + 1
-            new_row = [new_id, "out", amount, None]
+            date = QDateTime.currentDateTime().toString(Qt.DateFormat.ISODate)
+            operator = self.df_temp_user.loc[0, "username"]
+            new_row = [new_id, "out", amount, date, operator]
             self.df.loc[new_id] = new_row
             self.input_tarik_saldo.clear()
             self.df.to_csv("data/keuangan.csv", index=False)
@@ -84,3 +81,7 @@ class Keuangan(QWidget):
 
     def hitungSaldo(self):
         return self.df["amount"].sum()
+
+    def showWarning(self, message):
+        self.warning = Warning(message)
+        self.warning.show()

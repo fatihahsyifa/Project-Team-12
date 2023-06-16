@@ -1,3 +1,5 @@
 id,role,name,username,password
 1,admin,admin,admin,admin123
 2,cashier,cashier 1,cashier1,cashier123
+3,cashier,cashier 2,cashier2,cashier123
+4,cashier,cashier 3,cashier3,cashier123

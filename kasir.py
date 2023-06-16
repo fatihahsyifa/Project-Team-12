@@ -1,7 +1,7 @@
 import pandas as pd
 from PyQt6 import QtCore as Qtc
 from PyQt6 import uic
-from PyQt6.QtCore import Qt, QAbstractTableModel
+from PyQt6.QtCore import Qt, QAbstractTableModel, QDateTime
 from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
 
@@ -58,6 +58,8 @@ class Kasir(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         uic.loadUi('kasir.ui', self)
+        self.df_temp_user = pd.read_csv('data/temp_user.csv')
+
         self.button_search.clicked.connect(self.search)
         self.button_select.clicked.connect(self.select)
         self.button_hapus.clicked.connect(self.hapusItem)
@@ -86,9 +88,7 @@ class Kasir(QWidget):
 
     def search(self):
         keyword = self.input_search.text()
-        if keyword == "":
-            print("kosong")
-        else:
+        if keyword != "":
             self.initSearchTable(keyword)
 
     def select(self):
@@ -124,10 +124,16 @@ class Kasir(QWidget):
         total_price = self.total_price
         given_money = self.input_given_money.text()
         change_money = int(given_money) - self.total_price
-        date = 1
+        date = QDateTime.currentDateTime().toString(Qt.DateFormat.ISODate)
+        operator = self.df_temp_user.loc[0, "username"]
         df_transaksi = pd.read_csv('data/transaksi.csv')
-        new_id = int(df_transaksi.iloc[-1]["id"] + 1)
-        new_row = [new_id, total_price, given_money, change_money, date]
+
+        if len(df_transaksi) == 0:
+            new_id = 1
+        else:
+            new_id = df_transaksi.iloc[-1]["id"] + 1
+
+        new_row = [int(new_id), total_price, given_money, change_money, date, operator]
         df_transaksi.loc[len(df_transaksi)] = new_row
         df_transaksi.to_csv("data/transaksi.csv", index=False)
 
@@ -141,7 +147,10 @@ class Kasir(QWidget):
     def saveItems(self, id_transaksi):
         df_item = pd.read_csv('data/item.csv')
         for i in range(len(self.df_temp_item)):
-            new_id = int(df_item.iloc[-1]["id"] + 1)
+            if len(df_item) == 0:
+                new_id = 1
+            else:
+                new_id = int(df_item.iloc[-1]["id"] + 1)
             id_transaction = int(id_transaksi)
             product_name = self.df_temp_item.loc[i, "name"]
             product_merk = self.df_temp_item.loc[i, "merk"]
@@ -168,7 +177,9 @@ class Kasir(QWidget):
     def makeTransaction(self, amount):
         df = pd.read_csv('data/keuangan.csv')
         new_id = len(df) + 1
-        new_row = [new_id, "in", amount, None]
+        date = QDateTime.currentDateTime().toString(Qt.DateFormat.ISODate)
+        operator = self.df_temp_user.loc[0, "username"]
+        new_row = [new_id, "in", amount, date, operator]
         df.loc[new_id] = new_row
         df.to_csv("data/keuangan.csv", index=False)
         self.createdNewTransaction.emit("ok")

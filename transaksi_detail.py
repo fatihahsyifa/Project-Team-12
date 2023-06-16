@@ -1,7 +1,6 @@
 import pandas as pd
 from PyQt6 import uic
 from PyQt6.QtCore import Qt, QAbstractTableModel
-from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
 
 
@@ -49,3 +48,4 @@ class DetailTransaksi(QWidget):
         self.output_date.setText(str(data["date"]))
         self.output_given_money.setText(str(data["given_money"]))
         self.output_change_money.setText(str(data["change_money"]))
+        self.output_operator.setText(str(data["operator"]))

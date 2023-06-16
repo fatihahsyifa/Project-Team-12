@@ -5,6 +5,8 @@ from PyQt6 import QtCore as Qtc
 from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
 
+from warning import Warning
+
 class PandasModel(QAbstractTableModel):
     def __init__(self, data, keyword):
         super(PandasModel, self).__init__()
@@ -53,7 +55,7 @@ class SelectItem(QWidget):
             data_produk = df_produk.loc[df_produk["id"] == self.selected_id].iloc[0]
             qty = self.input_qty.text()
             if qty == "":
-                print("kosong")
+                self.showWarning("Quantity tidak boleh kosong")
             else:
                 qty = int(self.input_qty.text())
                 if qty > data_size["stok"]:
@@ -75,9 +77,14 @@ class SelectItem(QWidget):
                     df_temp_item = pd.read_csv('data/temp_item.csv')
                     df_temp_item.loc[len(df_temp_item)] = new_row
                     df_temp_item.to_csv('data/temp_item.csv', index=False)
+
                     # mengurangi stok
                     self.df.loc[self.df["id"] == data_size["id"], "stok"] -= qty
                     self.df.to_csv('data/size.csv', index=False)
 
                     self.submitClicked.emit("ok")
                     self.close()
+
+    def showWarning(self, message):
+        self.warning = Warning(message)
+        self.warning.show()

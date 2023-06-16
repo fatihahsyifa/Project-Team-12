@@ -11,3 +11,6 @@ id,id_transaction,product_name,product_merk,product_price,product_discount,qty,s
 10,9,Adidas Blue,Adidas Futsal,1250000,5,2,42,2375000.0
 11,9,Adidas Blue,Adidas Futsal,1250000,5,2,41,2375000.0
 12,10,Adidas Blue,Adidas Futsal,1250000,5,1,37,1187500.0
+13,11,Adidas Blue,Adidas Futsal,1250000,5,2,43,2375000.0
+14,12,Adidas Blue,Adidas Futsal,1250000,5,2,40,2375000.0
+15,13,Adidas Blue,Adidas Futsal,1250000,5,1,41,1187500.0

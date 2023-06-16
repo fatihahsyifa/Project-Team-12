@@ -1,8 +1,9 @@
 import pandas as pd
 from PyQt6 import uic
 from PyQt6.QtCore import Qt, QAbstractTableModel
-from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QWidget
+
+from warning import Warning
 
 
 class PandasModel(QAbstractTableModel):
@@ -47,9 +48,13 @@ class Akun(QWidget):
         username = self.input_tambah_username.text()
         password = self.input_tambah_password.text()
         if name == "" or username == "" or password == "":
-            print("kosong")
+            self.showWarning("Nama / Username / Password tidak boleh kosong")
         else:
-            new_id = self.df.iloc[-1]["id"] + 1
+            if len(self.df) == 0:
+                new_id = 1
+            else:
+                new_id = self.df.iloc[-1]["id"] + 1
+
             new_row = [new_id, "cashier", name, username, password]
             self.df.loc[len(self.df)] = new_row
             self.df.to_csv("data/user.csv", index=False)
@@ -90,7 +95,7 @@ class Akun(QWidget):
             password = self.input_edit_password.text()
 
             if name == "" or username == "" or password == "":
-                print("kosong")
+                self.showWarning("Nama / Username / Password tidak boleh kosong")
             else:
                 edited_row = [data["id"], data["role"], name, username, password]
                 self.df.loc[row] = edited_row
@@ -100,3 +105,7 @@ class Akun(QWidget):
                 self.input_edit_password.clear()
                 self.groupBox_edit_akun.setVisible(False)
                 self.initTable()
+
+    def showWarning(self, message):
+        self.warning = Warning(message)
+        self.warning.show()

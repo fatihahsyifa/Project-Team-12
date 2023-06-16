@@ -3,6 +3,7 @@ from PyQt6 import uic
 from PyQt6 import QtCore as Qtc
 from PyQt6.QtWidgets import QWidget
 
+from warning import Warning
 
 class EditProduk(QWidget):
     submitClicked = Qtc.pyqtSignal(str)
@@ -28,7 +29,7 @@ class EditProduk(QWidget):
         is_empty = name == "" or merk == "" or sell_price == "" or discount == "" or color == ""
 
         if is_empty:
-            print("kosong")
+            self.showWarning("Form tidak boleh kosong")
         else:
             sell_price = int(self.input_edit_sell_price.text())
             discount = int(self.input_edit_discount.text())
@@ -37,3 +38,7 @@ class EditProduk(QWidget):
             self.df.to_csv("data/produk.csv", index=False)
             self.submitClicked.emit("ok")
             self.close()
+
+    def showWarning(self, message):
+        self.warning = Warning(message)
+        self.warning.show()
